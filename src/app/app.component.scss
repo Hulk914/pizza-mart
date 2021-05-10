@@ -1,0 +1,42 @@
+.navbar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.highlight {
+  text-decoration: underline;
+}
+
+.routerOutlet {
+  margin-top: 70px;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-around;
+
+  #nav-container__title {
+    flex-basis: 50%;
+  }
+
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    li {
+      list-style: none;
+      padding: 8%;
+      border-right: 1px solid white;
+      cursor: pointer;
+    }
+    li:last-child {
+      border-right: none;
+      padding: 0;
+      align-self: flex-end;
+      padding-left: 8%;
+    }
+  }
+}

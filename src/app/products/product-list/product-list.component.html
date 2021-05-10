@@ -1,0 +1,136 @@
+<ng-container *ngIf="!isAdmin">
+  <div class="product-container">
+    <form [formGroup]="_dataStore?.productsFormGroup">
+      <ng-container formArrayName="productsFormArray">
+        <mat-card
+          class="product-container__list"
+          *ngFor="let product of productsFormArray.controls; index as i"
+        >
+          <ng-container [formGroupName]="i">
+            <mat-card-header>
+              <mat-card-title
+                >{{ product?.value?.name }}
+                <span id="outofstock" *ngIf="product?.value?.availableQty <= 0"
+                  >(Out of stock)</span
+                ></mat-card-title
+              >
+              <mat-card-subtitle
+                >INR {{ product?.value?.price }}</mat-card-subtitle
+              >
+            </mat-card-header>
+            <img
+              mat-card-image
+              [src]="product?.value?.imageURL"
+              alt="Product Image"
+            />
+            <mat-card-actions>
+              <mat-icon (click)="removeItem(i)">remove</mat-icon>
+              <mat-form-field class="product-container__qty" appearance="fill">
+                <mat-label>Qty</mat-label>
+                <input
+                  formControlName="selectedQty"
+                  matInput
+                  type="number"
+                  min="0"
+                />
+                <mat-error *ngIf="product?.get('selectedQty').hasError('max')">
+                  Only {{ product?.get("availableQty").value }} in stock.
+                </mat-error>
+                <mat-error *ngIf="product?.get('selectedQty').hasError('min')">
+                  Enter valid qty
+                </mat-error>
+              </mat-form-field>
+              <mat-icon (click)="addItem(i)">add</mat-icon>
+            </mat-card-actions>
+          </ng-container>
+        </mat-card>
+      </ng-container>
+    </form>
+  </div>
+  <div class="checkout">
+    <button (click)="checkout()" mat-raised-button color="primary">
+      Checkout
+    </button>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isAdmin">
+  <div class="product-container">
+    <div class="product-container__actions">
+      <button (click)="saveAdminUpdates()" mat-raised-button color="primary">
+        Save Changes
+      </button>
+      <button (click)="addProduct()" mat-raised-button color="primary">
+        Add New Product
+      </button>
+    </div>
+    <form [formGroup]="_dataStore?.productsFormGroup">
+      <ng-container formArrayName="productsFormArray">
+        <mat-card
+          class="product-container__list"
+          *ngFor="let product of productsFormArray.controls; index as i"
+        >
+          <ng-container [formGroupName]="i">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-form-field appearance="fill">
+                  <mat-label>Name of Product</mat-label>
+                  <input formControlName="name" matInput type="text" required />
+                  <mat-error *ngIf="product?.get('name').hasError('required')">
+                    Name is mandatory.
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                  <mat-label>INR</mat-label>
+                  <input
+                    formControlName="price"
+                    matInput
+                    type="number"
+                    min="0"
+                    required
+                  />
+                  <mat-error *ngIf="product?.get('price').hasError('required')">
+                    Price is mandatory.
+                  </mat-error>
+                  <mat-error *ngIf="product?.get('price').hasError('min')">
+                    Enter valid price
+                  </mat-error>
+                </mat-form-field>
+              </mat-card-title>
+            </mat-card-header>
+            <img
+              mat-card-image
+              [src]="product?.value?.imageURL"
+              alt="Product Image"
+            />
+            <mat-card-actions class="product-container__admin-actions">
+              <mat-form-field class="product-container__qty" appearance="fill">
+                <mat-label>Available Qty</mat-label>
+                <input
+                  formControlName="availableQty"
+                  matInput
+                  type="number"
+                  min="0"
+                  required
+                />
+                <mat-error
+                  *ngIf="product?.get('availableQty').hasError('required')"
+                >
+                  Qty is mandatory.
+                </mat-error>
+                <mat-error *ngIf="product?.get('availableQty').hasError('min')">
+                  Enter valid qty
+                </mat-error>
+              </mat-form-field>
+            </mat-card-actions>
+            <div class="product-container__delete">
+              <button mat-raised-button color="warn" (click)="deleteItem(i)">
+                Delete
+              </button>
+            </div>
+          </ng-container>
+        </mat-card>
+      </ng-container>
+    </form>
+  </div>
+</ng-container>
